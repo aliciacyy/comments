@@ -58,7 +58,7 @@ export default async function Home() {
                 <p>{comment.body}</p>
                 <footer>
                   <a href={comment.source_url}>
-                    Article on {hostname}
+                    Posted on {comment.source_url}
                   </a>
                   <Link href={discussionUrl}>View conversation →</Link>
                 </footer>

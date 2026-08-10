@@ -20,7 +20,7 @@ export async function getComments(sourceUrl: string) {
     SELECT id, source_url, author_name, body, created_at
     FROM comments
     WHERE source_url = ${sourceUrl}
-    ORDER BY created_at ASC
+    ORDER BY created_at DESC
   `;
   return rows as Comment[];
 }

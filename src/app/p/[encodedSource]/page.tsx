@@ -1,16 +1,20 @@
-import { notFound } from "next/navigation";
-import CommentForm from "@/components/comment-form";
-import { getComments } from "@/lib/db";
-import { decodeSourceUrl } from "@/lib/source-url";
+import { notFound } from 'next/navigation';
+import CommentForm from '@/components/comment-form';
+import { getComments } from '@/lib/db';
+import { decodeSourceUrl } from '@/lib/source-url';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
-export default async function DiscussionPage({ params }: { params: Promise<{ encodedSource: string }> }) {
+export default async function DiscussionPage({
+  params,
+}: {
+  params: Promise<{ encodedSource: string }>;
+}) {
   const { encodedSource } = await params;
   const sourceUrl = decodeSourceUrl(encodedSource);
   if (!sourceUrl) notFound();
 
-  const hostname = new URL(sourceUrl).hostname.replace(/^www\./, "");
+  const hostname = new URL(sourceUrl).hostname.replace(/^www\./, '');
   let comments = [] as Awaited<ReturnType<typeof getComments>>;
   let databaseReady = true;
   try {
@@ -21,15 +25,26 @@ export default async function DiscussionPage({ params }: { params: Promise<{ enc
 
   return (
     <main className="discussion-shell">
-      <a className="back-link" href={sourceUrl}>← Back to the article on {hostname}</a>
+      <a className="back-link" href="https://comments-pied.vercel.app">
+        ← Back to home
+      </a>
       <header className="discussion-header">
         <p className="eyebrow">Conversation</p>
-        <h1>{comments.length === 0 ? "Start the conversation" : `${comments.length} ${comments.length === 1 ? "comment" : "comments"}`}</h1>
-        <a className="source-url" href={sourceUrl}>{sourceUrl}</a>
+        <h1>
+          {comments.length === 0
+            ? 'Start the conversation'
+            : `${comments.length} ${comments.length === 1 ? 'comment' : 'comments'}`}
+        </h1>
+        <a className="source-url" href={sourceUrl}>
+          {sourceUrl}
+        </a>
       </header>
 
       {!databaseReady ? (
-        <div className="setup-message">This comment page is ready, but its database has not been connected yet.</div>
+        <div className="setup-message">
+          This comment page is ready, but its database has not been connected
+          yet.
+        </div>
       ) : (
         <>
           <section className="comments-list" aria-label="Comments">
@@ -37,7 +52,11 @@ export default async function DiscussionPage({ params }: { params: Promise<{ enc
               <article className="comment" key={comment.id}>
                 <div className="comment-meta">
                   <strong>{comment.author_name}</strong>
-                  <time dateTime={comment.created_at}>{new Intl.DateTimeFormat("en", { dateStyle: "medium" }).format(new Date(comment.created_at))}</time>
+                  <time dateTime={comment.created_at}>
+                    {new Intl.DateTimeFormat('en', {
+                      dateStyle: 'medium',
+                    }).format(new Date(comment.created_at))}
+                  </time>
                 </div>
                 <p>{comment.body}</p>
               </article>
