@@ -67,7 +67,6 @@ export default function CommentForm({ encodedSource }: { encodedSource: string }
       body: JSON.stringify({
         encodedSource,
         authorName: data.get("authorName"),
-        authorEmail: data.get("authorEmail"),
         body: data.get("body"),
         turnstileToken,
       }),
@@ -98,10 +97,6 @@ export default function CommentForm({ encodedSource }: { encodedSource: string }
           <div>
             <label htmlFor="authorName">Name</label>
             <input id="authorName" name="authorName" maxLength={80} required />
-          </div>
-          <div>
-            <label htmlFor="authorEmail">Email <span>(optional, never shown)</span></label>
-            <input id="authorEmail" name="authorEmail" type="email" maxLength={320} />
           </div>
         </div>
         <label htmlFor="body">Comment</label>

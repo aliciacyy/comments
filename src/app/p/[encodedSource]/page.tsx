@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation';
+import { cookies } from 'next/headers';
 import CommentForm from '@/components/comment-form';
-import { getComments } from '@/lib/db';
+import { ADMIN_SESSION_COOKIE, isValidAdminSession } from '@/lib/admin-auth';
+import { createConversation, getComments } from '@/lib/db';
 import { decodeSourceUrl } from '@/lib/source-url';
 
 export const dynamic = 'force-dynamic';
@@ -14,10 +16,13 @@ export default async function DiscussionPage({
   const sourceUrl = decodeSourceUrl(encodedSource);
   if (!sourceUrl) notFound();
 
-  const hostname = new URL(sourceUrl).hostname.replace(/^www\./, '');
   let comments = [] as Awaited<ReturnType<typeof getComments>>;
   let databaseReady = true;
   try {
+    const cookieStore = await cookies();
+    if (isValidAdminSession(cookieStore.get(ADMIN_SESSION_COOKIE)?.value)) {
+      await createConversation(sourceUrl);
+    }
     comments = await getComments(sourceUrl);
   } catch {
     databaseReady = false;
@@ -25,20 +30,20 @@ export default async function DiscussionPage({
 
   return (
     <main className="discussion-shell">
-      <a className="back-link" href="https://comments-pied.vercel.app">
-        ← Back to home
-      </a>
       <header className="discussion-header">
-        <p className="eyebrow">Conversation</p>
-        <h1>
-          {comments.length === 0
-            ? 'Start the conversation'
-            : `${comments.length} ${comments.length === 1 ? 'comment' : 'comments'}`}
-        </h1>
-        <a className="source-url" href={sourceUrl}>
-          {sourceUrl}
-        </a>
+        <div className="post-header">
+          <span>Post: </span>
+          <a className="source-url" href={sourceUrl}>
+            {sourceUrl}
+          </a>
+        </div>
       </header>
+
+      <p className="eyebrow">
+        {comments.length === 0
+          ? 'No comments yet :('
+          : `${comments.length} ${comments.length === 1 ? 'comment' : 'comments'}`}
+      </p>
 
       {!databaseReady ? (
         <div className="setup-message">

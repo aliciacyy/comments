@@ -1,15 +1,15 @@
 import Link from 'next/link';
-import { getRecentComments } from '@/lib/db';
+import { getRecentConversations } from '@/lib/db';
 import { encodeSourceUrl } from '@/lib/source-url';
 
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  let comments = [] as Awaited<ReturnType<typeof getRecentComments>>;
+  let conversations = [] as Awaited<ReturnType<typeof getRecentConversations>>;
   let databaseReady = true;
 
   try {
-    comments = await getRecentComments();
+    conversations = await getRecentConversations();
   } catch {
     databaseReady = false;
   }
@@ -19,7 +19,6 @@ export default async function Home() {
       <header className="feed-header">
         <div>
           <p className="eyebrow">Latest conversations</p>
-          <h1>Comments from across the blog.</h1>
         </div>
       </header>
 
@@ -28,7 +27,7 @@ export default async function Home() {
           The comment feed is ready, but its database has not been connected
           yet.
         </div>
-      ) : comments.length === 0 ? (
+      ) : conversations.length === 0 ? (
         <section className="empty-feed">
           <h2>No comments yet.</h2>
           <p>
@@ -37,29 +36,28 @@ export default async function Home() {
           </p>
         </section>
       ) : (
-        <section className="feed-list" aria-label="Latest comments">
-          {comments.map((comment) => {
-            const discussionUrl = `/p/${encodeSourceUrl(comment.source_url)}`;
-            const hostname = new URL(comment.source_url).hostname.replace(
-              /^www\./,
-              '',
-            );
+        <section className="feed-list" aria-label="Latest conversations">
+          {conversations.map((conversation) => {
+            const discussionUrl = `/p/${encodeSourceUrl(conversation.source_url)}`;
 
             return (
-              <article className="feed-comment" key={comment.id}>
+              <article className="feed-comment" key={conversation.source_url}>
                 <div className="comment-meta">
-                  <strong>{comment.author_name}</strong>
-                  <time dateTime={comment.created_at}>
+                  <strong>Post link</strong>
+                  <time dateTime={conversation.created_at}>
                     {new Intl.DateTimeFormat('en', {
                       dateStyle: 'medium',
-                    }).format(new Date(comment.created_at))}
+                    }).format(new Date(conversation.created_at))}
                   </time>
                 </div>
-                <p>{comment.body}</p>
+                <a className="feed-source-url" href={conversation.source_url}>
+                  {conversation.source_url}
+                </a>
                 <footer>
-                  <a href={comment.source_url}>
-                    Posted on {comment.source_url}
-                  </a>
+                  <span>
+                    {conversation.comment_count}{' '}
+                    {conversation.comment_count === 1 ? 'comment' : 'comments'}
+                  </span>
                   <Link href={discussionUrl}>View conversation →</Link>
                 </footer>
               </article>
