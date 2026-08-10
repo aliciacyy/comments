@@ -30,7 +30,7 @@ export default function CommentForm({ encodedSource }: { encodedSource: string }
       sitekey: siteKey,
       action: "comment",
       theme: "auto",
-      size: "flexible",
+      size: container.clientWidth < 300 ? "compact" : "flexible",
       callback: (token: string) => {
         setTurnstileToken(token);
         setError("");

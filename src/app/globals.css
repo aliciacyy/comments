@@ -79,7 +79,8 @@ input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px
 .submit-row { display: flex; align-items: center; gap: 16px; margin-top: 16px; }
 .submit-row span { font-size: 12px; }
 .turnstile-wrap { min-height: 65px; margin-top: 18px; }
-#comment-turnstile { max-width: 100%; }
+#comment-turnstile { width: 100%; max-width: 100%; }
+#comment-turnstile > div { margin-inline: auto; }
 .setup-message { margin-top: 48px; padding: 22px; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); background: var(--card); }
 .not-found { max-width: 780px; margin: 15vh auto; padding: 28px; }
 .not-found h1 { margin-bottom: 28px; }
@@ -91,10 +92,15 @@ input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px
   .input-row button { min-height: 50px; }
   .generated-link { grid-template-columns: 1fr auto; }
   .generated-link span { grid-column: 1 / -1; }
-  .discussion-shell { margin-top: 2vh; }
+  .discussion-shell { width: calc(100% - 20px); margin-top: 2vh; }
   .back-link { margin-bottom: 42px; }
+  .comment-form { padding: 18px; }
   .feed-header { grid-template-columns: 1fr; }
   .admin-link { width: fit-content; }
+}
+
+@media (max-width: 357px) {
+  .turnstile-wrap { min-height: 140px; }
 }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
