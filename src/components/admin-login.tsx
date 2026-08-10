@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 
-export default function HomeLogin({ configured }: { configured: boolean }) {
+export default function AdminLogin({ configured }: { configured: boolean }) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
 
@@ -12,7 +12,7 @@ export default function HomeLogin({ configured }: { configured: boolean }) {
     setError("");
 
     const password = String(new FormData(event.currentTarget).get("password") ?? "");
-    const response = await fetch("/api/home-login", {
+    const response = await fetch("/api/admin-login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password }),
@@ -31,7 +31,7 @@ export default function HomeLogin({ configured }: { configured: boolean }) {
     <main className="login-shell">
       <section className="login-card">
         <p className="eyebrow">Private access</p>
-        <h1>Open the link generator.</h1>
+        <h1>Open the admin.</h1>
         <p>Enter your private password to create a comment page.</p>
         <form onSubmit={submit}>
           <label htmlFor="password">Password</label>

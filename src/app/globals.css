@@ -40,6 +40,19 @@ input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px
 .text-link { color: var(--accent-dark); font-size: 14px; font-weight: 700; text-decoration: none; }
 .form-error { margin: 12px 0 0; color: #ad2e24; font-size: 13px; }
 .privacy-note { margin: 24px 0 0; color: var(--muted); font-size: 13px; }
+.feed-shell { width: min(900px, calc(100% - 40px)); margin: 6vh auto 80px; }
+.feed-header { display: grid; grid-template-columns: 1fr auto; align-items: start; gap: 28px; padding-bottom: 46px; border-bottom: 1px solid var(--line); }
+.feed-header h1 { max-width: 760px; font-size: clamp(46px, 8vw, 76px); }
+.admin-link { padding: 9px 13px; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); font-size: 12px; font-weight: 700; text-decoration: none; }
+.feed-list { display: grid; }
+.feed-comment { padding: 34px 2px; border-bottom: 1px solid var(--line); }
+.feed-comment > p { max-width: 760px; margin: 15px 0 22px; font-family: Georgia, serif; font-size: 20px; line-height: 1.65; white-space: pre-wrap; }
+.feed-comment footer { display: flex; flex-wrap: wrap; gap: 10px 24px; }
+.feed-comment footer a { color: var(--muted); font-size: 13px; font-weight: 700; text-decoration: none; }
+.feed-comment footer a:last-child { color: var(--accent-dark); }
+.empty-feed { padding: 60px 0; }
+.empty-feed h2 { margin: 0 0 10px; font-family: Georgia, serif; font-size: 30px; font-weight: 500; }
+.empty-feed p { color: var(--muted); }
 .home-actions { display: flex; justify-content: flex-end; margin-bottom: 36px; }
 .logout-button { padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); background: rgba(255, 253, 248, .65); font-size: 12px; font-weight: 700; }
 .logout-button:hover { color: var(--ink); border-color: var(--muted); }
@@ -65,6 +78,8 @@ input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
 .submit-row { display: flex; align-items: center; gap: 16px; margin-top: 16px; }
 .submit-row span { font-size: 12px; }
+.turnstile-wrap { min-height: 65px; margin-top: 18px; }
+#comment-turnstile { max-width: 100%; }
 .setup-message { margin-top: 48px; padding: 22px; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); background: var(--card); }
 .not-found { max-width: 780px; margin: 15vh auto; padding: 28px; }
 .not-found h1 { margin-bottom: 28px; }
@@ -78,6 +93,8 @@ input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px
   .generated-link span { grid-column: 1 / -1; }
   .discussion-shell { margin-top: 2vh; }
   .back-link { margin-bottom: 42px; }
+  .feed-header { grid-template-columns: 1fr; }
+  .admin-link { width: fit-content; }
 }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }

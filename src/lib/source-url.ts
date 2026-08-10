@@ -9,3 +9,7 @@ export function decodeSourceUrl(encoded: string): string | null {
     return null;
   }
 }
+
+export function encodeSourceUrl(sourceUrl: string) {
+  return Buffer.from(sourceUrl, "utf8").toString("base64url");
+}

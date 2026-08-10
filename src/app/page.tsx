@@ -1,29 +1,72 @@
-import { cookies } from "next/headers";
-import LinkGenerator from "@/components/link-generator";
-import HomeLogin from "@/components/home-login";
-import LogoutButton from "@/components/logout-button";
-import { authIsConfigured, HOME_SESSION_COOKIE, isValidHomeSession } from "@/lib/home-auth";
+import Link from 'next/link';
+import { getRecentComments } from '@/lib/db';
+import { encodeSourceUrl } from '@/lib/source-url';
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const cookieStore = await cookies();
-  const authenticated = isValidHomeSession(cookieStore.get(HOME_SESSION_COOKIE)?.value);
+  let comments = [] as Awaited<ReturnType<typeof getRecentComments>>;
+  let databaseReady = true;
 
-  if (!authenticated) return <HomeLogin configured={authIsConfigured()} />;
+  try {
+    comments = await getRecentComments();
+  } catch {
+    databaseReady = false;
+  }
 
   return (
-    <main className="home-shell">
-      <div className="home-actions"><LogoutButton /></div>
-      <section className="hero">
-        <p className="eyebrow">A tiny comment layer for your writing</p>
-        <h1>Give every post its own conversation.</h1>
-        <p className="lede">
-          Paste a published article URL. We’ll make a standalone comment page you can link from anywhere.
-        </p>
-        <LinkGenerator />
-      </section>
-      <p className="privacy-note">No account needed. Every generated link is tied to its original article.</p>
+    <main className="feed-shell">
+      <header className="feed-header">
+        <div>
+          <p className="eyebrow">Latest conversations</p>
+          <h1>Comments from across the blog.</h1>
+        </div>
+      </header>
+
+      {!databaseReady ? (
+        <div className="setup-message">
+          The comment feed is ready, but its database has not been connected
+          yet.
+        </div>
+      ) : comments.length === 0 ? (
+        <section className="empty-feed">
+          <h2>No comments yet.</h2>
+          <p>
+            New comments will appear here as soon as readers join a
+            conversation.
+          </p>
+        </section>
+      ) : (
+        <section className="feed-list" aria-label="Latest comments">
+          {comments.map((comment) => {
+            const discussionUrl = `/p/${encodeSourceUrl(comment.source_url)}`;
+            const hostname = new URL(comment.source_url).hostname.replace(
+              /^www\./,
+              '',
+            );
+
+            return (
+              <article className="feed-comment" key={comment.id}>
+                <div className="comment-meta">
+                  <strong>{comment.author_name}</strong>
+                  <time dateTime={comment.created_at}>
+                    {new Intl.DateTimeFormat('en', {
+                      dateStyle: 'medium',
+                    }).format(new Date(comment.created_at))}
+                  </time>
+                </div>
+                <p>{comment.body}</p>
+                <footer>
+                  <a href={comment.source_url}>
+                    Article on {hostname}
+                  </a>
+                  <Link href={discussionUrl}>View conversation →</Link>
+                </footer>
+              </article>
+            );
+          })}
+        </section>
+      )}
     </main>
   );
 }

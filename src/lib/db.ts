@@ -24,3 +24,14 @@ export async function getComments(sourceUrl: string) {
   `;
   return rows as Comment[];
 }
+
+export async function getRecentComments(limit = 100) {
+  const sql = database();
+  const rows = await sql`
+    SELECT id, source_url, author_name, body, created_at
+    FROM comments
+    ORDER BY created_at DESC
+    LIMIT ${limit}
+  `;
+  return rows as Comment[];
+}

@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import {
   authIsConfigured,
-  createHomeSessionToken,
-  HOME_SESSION_COOKIE,
+  createAdminSessionToken,
+  ADMIN_SESSION_COOKIE,
   passwordMatches,
-} from "@/lib/home-auth";
+} from "@/lib/admin-auth";
 
 export async function POST(request: Request) {
   if (!authIsConfigured()) {
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   }
 
   const response = NextResponse.json({ ok: true });
-  response.cookies.set(HOME_SESSION_COOKIE, createHomeSessionToken(), {
+  response.cookies.set(ADMIN_SESSION_COOKIE, createAdminSessionToken(), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",

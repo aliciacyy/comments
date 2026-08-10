@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-export const HOME_SESSION_COOKIE = "comments_home_session";
+export const ADMIN_SESSION_COOKIE = "comments_admin_session";
 
 function sessionSecret() {
   return process.env.SESSION_SECRET;
@@ -10,16 +10,16 @@ export function authIsConfigured() {
   return Boolean(process.env.PAGE_PASSWORD && sessionSecret());
 }
 
-export function createHomeSessionToken() {
+export function createAdminSessionToken() {
   const secret = sessionSecret();
   if (!secret) throw new Error("SESSION_SECRET is not configured");
-  return createHmac("sha256", secret).update("comments-home-access-v1").digest("base64url");
+  return createHmac("sha256", secret).update("comments-admin-access-v1").digest("base64url");
 }
 
-export function isValidHomeSession(token: string | undefined) {
+export function isValidAdminSession(token: string | undefined) {
   if (!token || !authIsConfigured()) return false;
 
-  const expected = createHomeSessionToken();
+  const expected = createAdminSessionToken();
   const providedBuffer = Buffer.from(token);
   const expectedBuffer = Buffer.from(expected);
 
