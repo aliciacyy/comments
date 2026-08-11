@@ -40,6 +40,17 @@ export async function getComments(sourceUrl: string) {
   return rows as Comment[];
 }
 
+export async function getLatestComments(limit = 5) {
+  const sql = database();
+  const rows = await sql`
+    SELECT id, source_url, author_name, body, created_at
+    FROM comments
+    ORDER BY created_at DESC
+    LIMIT ${limit}
+  `;
+  return rows as Comment[];
+}
+
 export async function getRecentConversations(limit = 100) {
   const sql = database();
   const rows = await sql`

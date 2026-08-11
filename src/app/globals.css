@@ -256,6 +256,44 @@ textarea:focus {
   justify-content: flex-end;
   margin-bottom: 36px;
 }
+.latest-comment-body {
+  margin: 14px 0 18px;
+  font-size: 18px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+.feed-tabs {
+  display: flex;
+  gap: 4px;
+  margin-top: 18px;
+  padding: 4px;
+  border-radius: 16px;
+  background: #e4e2dc;
+}
+.feed-tab {
+  flex: 1;
+  min-height: 48px;
+  padding: 10px 15px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  color: var(--muted);
+  background: transparent;
+  font-weight: 700;
+  transition: color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+.feed-tab[aria-selected='true'] {
+  border-color: rgba(30, 40, 35, 0.08);
+  color: var(--ink);
+  background: var(--card);
+  box-shadow: 0 5px 14px rgba(46, 40, 28, 0.14);
+}
+.feed-tab:not([aria-selected='true']):hover {
+  color: var(--ink);
+}
+.feed-panel:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
 .logout-button {
   padding: 8px 12px;
   border: 1px solid var(--line);
