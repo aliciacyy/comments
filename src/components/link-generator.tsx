@@ -2,6 +2,8 @@
 
 import { FormEvent, useState } from "react";
 
+const BLOG_URL = "https://pigrambles.bearblog.dev/";
+
 function encodeUrl(value: string) {
   const bytes = new TextEncoder().encode(value);
   let binary = "";
@@ -60,6 +62,14 @@ export default function LinkGenerator() {
     setCopied(true);
   }
 
+  function addBlogUrl() {
+    const currentValue = value.trim();
+    if (currentValue.startsWith(BLOG_URL)) return;
+
+    setValue(`${BLOG_URL}${currentValue.replace(/^\/+/, "")}`);
+    setError("");
+  }
+
   return (
     <div className="generator-card">
       <form onSubmit={submit}>
@@ -74,6 +84,9 @@ export default function LinkGenerator() {
             onChange={(event) => setValue(event.target.value)}
             required
           />
+          <button className="prefix-button" type="button" onClick={addBlogUrl}>
+            Add blog URL
+          </button>
           <button type="submit" disabled={pending}>
             {pending ? "Creating…" : "Create link"}
           </button>
