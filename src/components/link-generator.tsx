@@ -28,13 +28,12 @@ export default function LinkGenerator() {
   const [generated, setGenerated] = useState("");
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
-  const [pending, setPending] = useState(false);
+  const [pendingAction, setPendingAction] = useState<"blog" | "custom" | null>(null);
 
-  async function submit(event: FormEvent) {
-    event.preventDefault();
+  async function createLink(sourceUrl: string, action: "blog" | "custom") {
     try {
-      const normalized = normalizeUrl(value);
-      setPending(true);
+      const normalized = normalizeUrl(sourceUrl);
+      setPendingAction(action);
       const response = await fetch("/api/conversations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -53,8 +52,13 @@ export default function LinkGenerator() {
         ? error.message
         : "Enter a complete URL beginning with http:// or https://");
     } finally {
-      setPending(false);
+      setPendingAction(null);
     }
+  }
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    await createLink(value, "custom");
   }
 
   async function copy() {
@@ -62,12 +66,18 @@ export default function LinkGenerator() {
     setCopied(true);
   }
 
-  function addBlogUrl() {
+  async function addBlogUrl() {
     const currentValue = value.trim();
-    if (currentValue.startsWith(BLOG_URL)) return;
+    if (!currentValue) {
+      setGenerated("");
+      setError("Enter a post path first.");
+      return;
+    }
 
-    setValue(`${BLOG_URL}${currentValue.replace(/^\/+/, "")}`);
-    setError("");
+    const sourceUrl = currentValue.startsWith(BLOG_URL)
+      ? currentValue
+      : `${BLOG_URL}${currentValue.replace(/^\/+/, "")}`;
+    await createLink(sourceUrl, "blog");
   }
 
   return (
@@ -84,11 +94,16 @@ export default function LinkGenerator() {
             onChange={(event) => setValue(event.target.value)}
             required
           />
-          <button className="prefix-button" type="button" onClick={addBlogUrl}>
-            Add blog URL
+          <button
+            className="prefix-button"
+            type="button"
+            onClick={addBlogUrl}
+            disabled={pendingAction !== null}
+          >
+            {pendingAction === "blog" ? "Creating…" : "Add blog link"}
           </button>
-          <button type="submit" disabled={pending}>
-            {pending ? "Creating…" : "Create link"}
+          <button type="submit" disabled={pendingAction !== null}>
+            {pendingAction === "custom" ? "Creating…" : "Create link"}
           </button>
         </div>
         {error && <p className="form-error" role="alert">{error}</p>}
