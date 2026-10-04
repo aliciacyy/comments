@@ -23,3 +23,11 @@ Import this directory's Git repository into Vercel, connect a Neon Postgres inte
 - The generator lives at `/admin` and is protected by one private password.
 - Discussion pages remain public.
 - New comments require successful Cloudflare Turnstile verification.
+
+## Admin media uploader
+
+`/admin/media` uses the existing admin password and session. Select or drag in images, upload them to Cloudinary, then copy `![img](https://...)` Markdown for each upload. The image list lasts for the current page session; the files remain in Cloudinary.
+
+Configure `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `CLOUDINARY_FOLDER`, and `CLOUDINARY_FOLDER_MODE` in `.env.local` and in the deployment environment. Use `dynamic` for asset folders or `fixed` for legacy folder mode. Keep the API secret server-side; never use a `NEXT_PUBLIC_` prefix.
+
+The `/api/admin/media/config` and `/api/admin/media/sign` routes require a valid admin session. Signing accepts only same-origin POST requests and uses the server-configured destination folder. Files upload directly to Cloudinary.

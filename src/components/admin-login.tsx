@@ -32,7 +32,7 @@ export default function AdminLogin({ configured }: { configured: boolean }) {
       <section className="login-card">
         <p className="eyebrow">Private access</p>
         <h1>Open the admin.</h1>
-        <p>Enter your private password to create a comment page.</p>
+        <p>Enter your private password to access your admin tools.</p>
         <form onSubmit={submit}>
           <label htmlFor="password">Password</label>
           <input id="password" name="password" type="password" autoComplete="current-password" autoFocus required disabled={!configured} />

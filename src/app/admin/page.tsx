@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import LinkGenerator from '@/components/link-generator';
 import AdminLogin from '@/components/admin-login';
-import LogoutButton from '@/components/logout-button';
+import AdminActions from '@/components/admin-actions';
 import {
   ADMIN_SESSION_COOKIE,
   authIsConfigured,
@@ -20,9 +20,7 @@ export default async function AdminPage() {
 
   return (
     <main className="home-shell">
-      <div className="home-actions">
-        <LogoutButton />
-      </div>
+      <AdminActions current="generator" />
       <section className="hero">
         <p className="eyebrow">Admin · Link generator</p>
         <p className="lede">
